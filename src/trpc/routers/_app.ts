@@ -1,15 +1,17 @@
 import { z } from 'zod';
-import { baseProcedure, createTRPCRouter } from '../init';
+import { protectedProcedure, createTRPCRouter } from '../init';
+
 export const appRouter = createTRPCRouter({
-	hello: baseProcedure
-		.input(
-			z.object({
-				text: z.string(),
-			})
-		)
-		.query((opts) => {
+	hello: protectedProcedure
+		.input(z.object({ text: z.string() }))
+		.query(({ ctx, input }) => {
+			if (!ctx.clerkUserId) {
+				throw new Error('Unauthorized');
+			}
+			console.log(`context clerkID ${ctx.clerkUserId}`);
+
 			return {
-				greeting: `Hi ${opts.input.text}`,
+				greeting: `Hi ${input.text}`,
 			};
 		}),
 });
