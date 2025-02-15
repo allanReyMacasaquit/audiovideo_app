@@ -5,10 +5,10 @@ export const appRouter = createTRPCRouter({
 	hello: protectedProcedure
 		.input(z.object({ text: z.string() }))
 		.query(({ ctx, input }) => {
-			if (!ctx.clerkUserId) {
+			if (!ctx.user) {
 				throw new Error('Unauthorized');
 			}
-			console.log(`context clerkID ${ctx.clerkUserId}`);
+			console.log(`context clerkID ${JSON.stringify(ctx.user)}`);
 
 			return {
 				greeting: `Hi ${input.text}`,
