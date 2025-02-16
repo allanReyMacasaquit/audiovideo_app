@@ -1,5 +1,5 @@
 import React from 'react';
-import HomeLayout from '@/modules/home/ui/layout/page';
+import HomeLayout from '@/modules/home/layout/page';
 
 interface LayoutPageProps {
 	children: React.ReactNode;

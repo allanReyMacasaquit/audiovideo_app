@@ -88,8 +88,12 @@ const FilterCarousel = ({
 							</CarouselItem>
 						))}
 				</CarouselContent>
-				<CarouselPrevious className='left-0 z-20' />
-				<CarouselNext className='right-0 z-20' />
+				<CarouselPrevious
+					className={cn('left-0 z-20', current === 1 && 'hidden')}
+				/>
+				<CarouselNext
+					className={cn('right-0 z-20', current === count && 'hidden')}
+				/>
 			</Carousel>
 			{/* Right fade */}
 			<div
