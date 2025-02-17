@@ -1,6 +1,6 @@
 import { trpc } from '@/trpc/server';
 import { HydrateClient } from '@/trpc/server';
-import HomeView from '@/modules/home/ui/components/main/views/home-view';
+import HomeView from '@/modules/home/ui/components/views/home-view';
 
 interface Props {
 	searchParams: Promise<{ categoryId: string }>;
