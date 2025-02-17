@@ -4,7 +4,7 @@ import { HydrateClient } from '@/trpc/server';
 
 export const dynamic = 'force-dynamic';
 export default async function StudioPage() {
-	void trpc.studio.getMany.prefetchInfinite({ limit: 10 });
+	void trpc.studio.getMany.prefetchInfinite({ limit: 5 });
 	return (
 		<HydrateClient>
 			<StudioView />

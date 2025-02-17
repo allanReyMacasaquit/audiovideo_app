@@ -2,12 +2,21 @@
 
 import { VideosSection } from '../sections/videos-section';
 
-function StudioView() {
+const StudioView = () => {
 	return (
-		<div className='max-w-[100rem] mx-auto px-4 mb-10 p-2 flex flex-col gap-y-6 border shadow '>
+		<div className='max-w-[100rem] mx-auto flex flex-col gap-y-6 pt-2.5'>
+			{/* Header Section */}
+			<div className='px-4'>
+				<h1 className='text-4xl font-bold'>Channel</h1>
+				<h2 className='text-muted-foreground'>
+					Manage your channel content and videos
+				</h2>
+			</div>
+
+			{/* Videos Section */}
 			<VideosSection />
 		</div>
 	);
-}
+};
 
 export default StudioView;

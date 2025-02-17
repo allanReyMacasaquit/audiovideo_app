@@ -1,6 +1,6 @@
 'use client';
 
-import { CategoriesSection } from '../sections/categories-section';
+import { CategoriesSection } from '@/modules/categories/sections/categories-section';
 
 interface Props {
 	categoryId: string;
