@@ -2,15 +2,16 @@
 
 import { Button } from '@/components/ui/button';
 import { trpc } from '@/trpc/client';
-import { Loader2Icon, UploadIcon } from 'lucide-react';
+import { Loader2Icon, VideoIcon } from 'lucide-react';
 import { toast } from 'sonner';
+import { ResponsiveModal } from './responsive-modal';
+import { StudioUploader } from '../studio/ui/components/mux/studio-uploader';
 
 const StudioUploadModal = () => {
 	const utils = trpc.useUtils();
 
 	const create = trpc.videos.create.useMutation({
 		onSuccess: () => {
-			toast.success('Video Upload');
 			utils.studio.getMany.invalidate();
 		},
 		onError: () => {
@@ -19,18 +20,33 @@ const StudioUploadModal = () => {
 	});
 
 	return (
-		<Button
-			variant='secondary'
-			onClick={() => create.mutate()}
-			disabled={create.isPending}
-		>
-			{create.isPending ? (
-				<Loader2Icon className='animate-spin' />
-			) : (
-				<UploadIcon />
-			)}
-			Upload
-		</Button>
+		<>
+			<ResponsiveModal
+				title='Upload a video'
+				open={!!create.data?.url}
+				onOpenChange={() => create.reset()}
+			>
+				{create.data?.url ? (
+					<StudioUploader endpoint={create.data?.url} onSuccess={() => {}} />
+				) : (
+					<Loader2Icon className='animate-spin' />
+				)}
+			</ResponsiveModal>
+
+			<Button
+				variant='secondary'
+				onClick={() => create.mutate()}
+				disabled={create.isPending}
+				className='rounded-full hover:bg-gray-200 px-4'
+			>
+				{create.isPending ? (
+					<Loader2Icon className='animate-spin' />
+				) : (
+					<VideoIcon />
+				)}
+				Create
+			</Button>
+		</>
 	);
 };
 export default StudioUploadModal;

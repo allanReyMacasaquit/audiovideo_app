@@ -9,8 +9,10 @@ export const HomeNavbar = () => {
 			<div className='flex items-center justify-between gap-4 w-full'>
 				<LogoMenu />
 				<SearchInput />
-				<StudioUploadModal />
-				<AuthButton />
+				<div className='flex items-center gap-x-4'>
+					<StudioUploadModal />
+					<AuthButton />
+				</div>
 			</div>
 		</nav>
 	);

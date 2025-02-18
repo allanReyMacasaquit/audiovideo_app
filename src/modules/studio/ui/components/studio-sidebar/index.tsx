@@ -18,11 +18,11 @@ const StudioSidebar = () => {
 	const pathname = usePathname();
 	return (
 		<Sidebar className='pt-16 z-40 border-none' collapsible='icon'>
-			<SidebarContent className='bg-background'>
+			<SidebarContent className='border-2 flex flex-col justify-between h-full'>
 				<SidebarGroup>
 					<SidebarMenu>
 						<StudioSidebarHeader />
-						<Separator />
+
 						<SidebarMenuItem>
 							<SidebarMenuButton
 								isActive={pathname === '/studio'}
@@ -35,17 +35,18 @@ const StudioSidebar = () => {
 								</Link>
 							</SidebarMenuButton>
 						</SidebarMenuItem>
-						<Separator />
-						<SidebarMenuItem>
-							<SidebarMenuButton tooltip='Exit studio' asChild>
-								<Link href='/'>
-									<LogOutIcon className='size-5' />
-									<span className='text-sm'>Exit studio</span>
-								</Link>
-							</SidebarMenuButton>
-						</SidebarMenuItem>
 					</SidebarMenu>
 				</SidebarGroup>
+
+				<div className='p-1.5'>
+					<Separator />
+					<SidebarMenuButton tooltip='Exit studio' asChild>
+						<Link href='/'>
+							<LogOutIcon className='size-5' />
+							<span className='text-sm'>Exit studio</span>
+						</Link>
+					</SidebarMenuButton>
+				</div>
 			</SidebarContent>
 		</Sidebar>
 	);

@@ -63,7 +63,7 @@ const StudioSidebarHeader = () => {
 			</div>
 
 			<div className='flex items-center flex-col'>
-				<p className='text-sm font-semibold'>Your Profile</p>
+				<p className='text-sm font-semibold'>Your Channel</p>
 				<p className='text-xs'>{user.fullName}</p>
 			</div>
 		</SidebarHeader>
