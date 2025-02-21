@@ -90,8 +90,6 @@ export async function POST(req: Request) {
 						duration,
 					})
 					.where(eq(videos.muxAssetId, data.id));
-
-				console.log('Asset Ready:', data);
 				break;
 			}
 
@@ -123,8 +121,6 @@ export async function POST(req: Request) {
 					payload.data as VideoAssetTrackReadyWebhookEvent['data'] & {
 						asset_id?: string;
 					};
-
-				console.log('track ready');
 
 				const assetId = data.asset_id; // Use the asset_id from the payload
 				const muxTrackId = data.id; // This is the track ID

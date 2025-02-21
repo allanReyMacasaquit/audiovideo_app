@@ -26,7 +26,7 @@ import {
 	CheckCircle,
 	Eye,
 	EyeOffIcon,
-	Globe2Icon,
+	Globe,
 	LockIcon,
 	MessageSquareCodeIcon,
 	ThumbsUpIcon,
@@ -55,7 +55,7 @@ const StudioSectionSuspense = () => {
 				<Table>
 					<TableHeader className='shadow-md'>
 						<TableRow className='bg-gray-100'>
-							<TableHead className='pl-4'>
+							<TableHead className='pl-6'>
 								<div className='flex items-center '>
 									<Video className='w-4 h-4 mr-2' /> Video
 								</div>
@@ -108,7 +108,7 @@ const StudioSectionSuspense = () => {
 										>
 											<TableRow className='cursor-pointer'>
 												<TableCell>
-													<div className='flex items-center gap-4 p-2'>
+													<div className='flex items-center gap-4 px-4 py-2'>
 														<div className='relative aspect-video w-36 shrink-0'>
 															<VideoThumbnail
 																imageUrl={video.thumbnailUrl}
@@ -137,7 +137,7 @@ const StudioSectionSuspense = () => {
 														{video.visibility === 'private' ? (
 															<LockIcon className='w-4 h-4 mr-2' />
 														) : (
-															<Globe2Icon className='w-4 h-4 mr-2' />
+															<Globe className='w-4 h-4 mr-2' />
 														)}
 														{snakeCaseToTitle(video.visibility)}
 													</div>
@@ -147,7 +147,7 @@ const StudioSectionSuspense = () => {
 														{format(new Date(video.createdAt), 'd MMM yyyy')}
 													</div>
 												</TableCell>
-												<TableCell>Views</TableCell>{' '}
+												<TableCell>Views</TableCell>
 												<TableCell>Likes</TableCell>
 												<TableCell>Comments</TableCell>
 											</TableRow>

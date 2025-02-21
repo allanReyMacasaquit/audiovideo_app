@@ -15,14 +15,14 @@ const VideoThumbnail = ({ imageUrl, previewUrl, title, duration }: Props) => {
 			{/* Using Tailwind's aspect-video utility for a 16:9 ratio */}
 			<div className='aspect-video'>
 				<Image
-					src={imageUrl ?? './thumbnail.svg'}
+					src={imageUrl ?? './video_error_placeholder.svg'}
 					fill
 					alt={title}
 					className='object-cover w-full h-full transition-transform duration-300 ease-in-out group-hover:opacity-0'
 				/>
 				<Image
 					unoptimized={!!previewUrl}
-					src={previewUrl ?? './thumbnail.svg'}
+					src={previewUrl ?? './video_error_placeholder.svg'}
 					fill
 					alt={title}
 					className='object-cover w-full h-full transition-transform duration-300 ease-in-out opacity-0 group-hover:opacity-100'
