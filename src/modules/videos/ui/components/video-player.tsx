@@ -22,7 +22,7 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({
 			onPlay={onPlay}
 			playerInitTime={0}
 			thumbnailTime={0}
-			poster={thumbnailUrl || '/video_error_placeholder.svg'}
+			poster={thumbnailUrl || '/thumbnail.svg'}
 			className='w-full h-full object-contain'
 			accentColor='#ff2056'
 		/>

@@ -68,6 +68,10 @@ export const videos = pgTable('videos', {
 
 	thumbnailUrl: text('thumbnail_url'),
 	previewUrl: text('preview_url'),
+
+	thumbnailUrlkey: text('thumbnail_url_key'),
+	previewUrlkey: text('preview_url_key'),
+
 	duration: integer('duration').default(0),
 
 	visibility: videoVisibility('visibility').default('private').notNull(),
