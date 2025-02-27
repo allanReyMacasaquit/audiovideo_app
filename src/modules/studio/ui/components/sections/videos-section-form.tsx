@@ -15,6 +15,7 @@ import {
 	Globe,
 	HourglassIcon,
 	ImageIcon,
+	Loader2Icon,
 	LockIcon,
 	MoreVerticalIcon,
 	RotateCcwIcon,
@@ -94,6 +95,38 @@ const VideosSectionFormSuspense = ({ videoId }: Props) => {
 			toast.error('Something went wrong');
 		},
 	});
+	const generateTitle = trpc.videos.generateTitle.useMutation({
+		onSuccess: () => {
+			toast.success('Background job started', {
+				description: 'This may take sometime',
+			});
+		},
+		onError: () => {
+			toast.error('Something went wrong');
+		},
+	});
+
+	const generateDescription = trpc.videos.generateDescription.useMutation({
+		onSuccess: () => {
+			toast.success('Background job started', {
+				description: 'This may take sometime',
+			});
+		},
+		onError: () => {
+			toast.error('Something went wrong');
+		},
+	});
+
+	const generateThumbnail = trpc.videos.generateThumbnail.useMutation({
+		onSuccess: () => {
+			toast.success('Background job started', {
+				description: 'This may take sometime',
+			});
+		},
+		onError: () => {
+			toast.error('Something went wrong');
+		},
+	});
 
 	const restoreThumbnail = trpc.videos.restoreThumbnail.useMutation({
 		onSuccess: () => {
@@ -102,7 +135,7 @@ const VideosSectionFormSuspense = ({ videoId }: Props) => {
 			toast.success('Thumbnail restored');
 		},
 		onError: () => {
-			toast.error('Somethind went wrong');
+			toast.error('Something went wrong');
 		},
 	});
 
@@ -113,7 +146,7 @@ const VideosSectionFormSuspense = ({ videoId }: Props) => {
 			router.push('/studio');
 		},
 		onError: () => {
-			toast.error('Somethind went wrong');
+			toast.error('Something went wrong');
 		},
 	});
 
@@ -188,7 +221,26 @@ const VideosSectionFormSuspense = ({ videoId }: Props) => {
 								name='title'
 								render={({ field }) => (
 									<FormItem>
-										<FormLabel>Title</FormLabel>
+										<FormLabel>
+											<div className='flex items-center gap-x-2'>
+												Title
+												<Button
+													variant='outline'
+													type='button'
+													className='rounded-full h-8 w-8 hover:shadow-md [&_svg]:size-3'
+													onClick={() => generateTitle.mutate({ id: videoId })}
+													disabled={
+														generateTitle.isPending || !video.muxTrackId
+													}
+												>
+													{generateTitle.isPending ? (
+														<Loader2Icon className='h-4 w-4 animate-spin' />
+													) : (
+														<SparklesIcon className='h-4 w-4 text-orange-800' />
+													)}
+												</Button>
+											</div>
+										</FormLabel>
 										<FormControl>
 											<Input
 												{...field}
@@ -204,7 +256,28 @@ const VideosSectionFormSuspense = ({ videoId }: Props) => {
 								name='description'
 								render={({ field }) => (
 									<FormItem>
-										<FormLabel>Description</FormLabel>
+										<FormLabel>
+											<div className='flex items-center gap-x-2'>
+												Description
+												<Button
+													variant='outline'
+													type='button'
+													className='rounded-full h-8 w-8 border hover:shadow-md [&_svg]:size-3'
+													onClick={() =>
+														generateDescription.mutate({ id: videoId })
+													}
+													disabled={
+														generateDescription.isPending || !video.muxTrackId
+													}
+												>
+													{generateDescription.isPending ? (
+														<Loader2Icon className='h-4 w-4 animate-spin' />
+													) : (
+														<SparklesIcon className='h-4 w-4 text-orange-800' />
+													)}
+												</Button>
+											</div>
+										</FormLabel>
 										<FormControl>
 											<Textarea
 												{...field}
@@ -252,7 +325,11 @@ const VideosSectionFormSuspense = ({ videoId }: Props) => {
 														>
 															<ImageIcon className='h4 w-4' /> Change
 														</DropdownMenuItem>
-														<DropdownMenuItem>
+														<DropdownMenuItem
+															onClick={() =>
+																generateThumbnail.mutate({ id: videoId })
+															}
+														>
 															<SparklesIcon className='h4 w-4' /> AI generated
 														</DropdownMenuItem>
 														<DropdownMenuItem

@@ -1,6 +1,7 @@
 import { db } from '@/db';
 import { videos, videoUpdateSchema } from '@/db/schema';
 import { muxClient } from '@/lib/mux';
+import { QStashClient } from '@/lib/qstash';
 import { createTRPCRouter, protectedProcedure } from '@/trpc/init';
 import { TRPCError } from '@trpc/server';
 import { and, eq } from 'drizzle-orm';
@@ -137,5 +138,38 @@ export const videoRouter = createTRPCRouter({
 				.returning();
 
 			return updatedVideo;
+		}),
+	generateThumbnail: protectedProcedure
+		.input(z.object({ id: z.string().uuid() }))
+		.mutation(async ({ ctx, input }) => {
+			const { id: userId } = ctx.user;
+			const { workflowRunId } = await QStashClient.trigger({
+				url: `${process.env.UPSTASH_WORKFLOW_URL}/api/videos/workflows/title`,
+				body: { userId, videoId: input.id }, // Optional body
+				retries: 3,
+			});
+			return workflowRunId;
+		}),
+	generateTitle: protectedProcedure
+		.input(z.object({ id: z.string().uuid() }))
+		.mutation(async ({ ctx, input }) => {
+			const { id: userId } = ctx.user;
+			const { workflowRunId } = await QStashClient.trigger({
+				url: `${process.env.UPSTASH_WORKFLOW_URL}/api/videos/workflows/title`,
+				body: { userId, videoId: input.id }, // Optional body
+				retries: 3,
+			});
+			return workflowRunId;
+		}),
+	generateDescription: protectedProcedure
+		.input(z.object({ id: z.string().uuid() }))
+		.mutation(async ({ ctx, input }) => {
+			const { id: userId } = ctx.user;
+			const { workflowRunId } = await QStashClient.trigger({
+				url: `${process.env.UPSTASH_WORKFLOW_URL}/api/videos/workflows/description`,
+				body: { userId, videoId: input.id }, // Optional body
+				retries: 3,
+			});
+			return workflowRunId;
 		}),
 });

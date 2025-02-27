@@ -111,8 +111,14 @@ const StudioSectionSuspense = () => {
 													<div className='flex items-center gap-4 px-4 py-2'>
 														<div className='relative aspect-video w-36 shrink-0'>
 															<VideoThumbnail
-																imageUrl={video.thumbnailUrl}
-																previewUrl={video.previewUrl}
+																imageUrl={
+																	video.thumbnailUrl ||
+																	'./video_error_placeholder.svg'
+																}
+																previewUrl={
+																	video.previewUrl ||
+																	'./video_error_placeholder.svg'
+																}
 																title={video.title}
 																duration={video.duration || 0}
 															/>
