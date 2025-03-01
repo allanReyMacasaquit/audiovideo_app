@@ -10,6 +10,7 @@ import {
 import { videoUpdateSchema } from '@/db/schema';
 import { trpc } from '@/trpc/client';
 import {
+	CogIcon,
 	Copy,
 	ExternalLinkIcon,
 	Globe,
@@ -53,6 +54,7 @@ import { useRouter } from 'next/navigation';
 import VideoSectionFormSkeleton from './videos-form-skeleton';
 import Image from 'next/image';
 import ThumbnailUploadModal from '@/modules/modals/thumbnail-upload-modal';
+import ThumbnailGenerateModal from '@/modules/modals/thumbnail-generate-modal';
 
 interface Props {
 	videoId: string;
@@ -60,7 +62,23 @@ interface Props {
 export const VideosSectionForm = ({ videoId }: Props) => {
 	return (
 		<Suspense fallback={<VideoSectionFormSkeleton />}>
-			<ErrorBoundary fallback={<div>Something went wrong</div>}>
+			<ErrorBoundary
+				fallback={
+					<div className='justify-center items-center flex flex-col h-screen rounded-md'>
+						<div className='p-4 bg-slate-500 rounded-md text-white'>
+							<div className='flex'>
+								<h1 className='animate-pulse font-semibold text-3xl tracking-widest'>
+									SERVER ERROR
+								</h1>
+								<span>
+									<CogIcon className='animate-spin' />
+								</span>
+							</div>
+							<span>Call your Administrator</span>
+						</div>
+					</div>
+				}
+			>
 				<VideosSectionFormSuspense videoId={videoId} />
 			</ErrorBoundary>
 		</Suspense>
@@ -85,6 +103,10 @@ const VideosSectionFormSuspense = ({ videoId }: Props) => {
 	// State for the thumbnail modal
 	const [thumbnailModalOpen, setThumbnailModalOpen] = useState(false);
 
+	// State for the Generate thumbnail modal
+	const [thumbnailGenerateModalOpen, setThumbnailGenerateModalOpen] =
+		useState(false);
+
 	const update = trpc.videos.update.useMutation({
 		onSuccess: () => {
 			utils.studio.getMany.invalidate();
@@ -107,17 +129,6 @@ const VideosSectionFormSuspense = ({ videoId }: Props) => {
 	});
 
 	const generateDescription = trpc.videos.generateDescription.useMutation({
-		onSuccess: () => {
-			toast.success('Background job started', {
-				description: 'This may take sometime',
-			});
-		},
-		onError: () => {
-			toast.error('Something went wrong');
-		},
-	});
-
-	const generateThumbnail = trpc.videos.generateThumbnail.useMutation({
 		onSuccess: () => {
 			toast.success('Background job started', {
 				description: 'This may take sometime',
@@ -176,6 +187,11 @@ const VideosSectionFormSuspense = ({ videoId }: Props) => {
 			<ThumbnailUploadModal
 				open={thumbnailModalOpen}
 				onOpenChange={setThumbnailModalOpen}
+				videoId={videoId}
+			/>
+			<ThumbnailGenerateModal
+				open={thumbnailGenerateModalOpen}
+				onOpenChange={setThumbnailGenerateModalOpen}
 				videoId={videoId}
 			/>
 			<Form {...form}>
@@ -327,7 +343,7 @@ const VideosSectionFormSuspense = ({ videoId }: Props) => {
 														</DropdownMenuItem>
 														<DropdownMenuItem
 															onClick={() =>
-																generateThumbnail.mutate({ id: videoId })
+																setThumbnailGenerateModalOpen(true)
 															}
 														>
 															<SparklesIcon className='h4 w-4' /> AI generated
@@ -377,8 +393,8 @@ const VideosSectionFormSuspense = ({ videoId }: Props) => {
 							/>
 						</div>
 						<div className='flex flex-col gap-8 lg:col-span-2'>
-							<div className='flex flex-col gap-6 overflow-hidden h-full w-full py-4'>
-								<div className='aspect-video shadow-md  shadow-slate-700 overflow-hidden relative rounded-xl'>
+							<div className='flex flex-col gap-6  overflow-hidden py-4'>
+								<div className='aspect-video overflow-hidden relative rounded-xl px-2.5 pt-1'>
 									<VideoPlayer
 										playbackId={video.muxPlaybackId}
 										thumbnailUrl={video.thumbnailUrl}

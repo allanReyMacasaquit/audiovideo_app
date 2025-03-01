@@ -140,12 +140,12 @@ export const videoRouter = createTRPCRouter({
 			return updatedVideo;
 		}),
 	generateThumbnail: protectedProcedure
-		.input(z.object({ id: z.string().uuid() }))
+		.input(z.object({ id: z.string().uuid(), prompt: z.string().min(10) }))
 		.mutation(async ({ ctx, input }) => {
 			const { id: userId } = ctx.user;
 			const { workflowRunId } = await QStashClient.trigger({
-				url: `${process.env.UPSTASH_WORKFLOW_URL}/api/videos/workflows/title`,
-				body: { userId, videoId: input.id }, // Optional body
+				url: `${process.env.UPSTASH_WORKFLOW_URL}/api/videos/workflows/thumbnail`,
+				body: { userId, videoId: input.id, prompt: input.prompt }, // Optional body
 				retries: 3,
 			});
 			return workflowRunId;
