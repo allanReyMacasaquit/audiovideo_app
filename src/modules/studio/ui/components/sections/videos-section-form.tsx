@@ -12,6 +12,7 @@ import { trpc } from '@/trpc/client';
 import {
 	CogIcon,
 	Copy,
+	DownloadIcon,
 	ExternalLinkIcon,
 	Globe,
 	HourglassIcon,
@@ -182,6 +183,31 @@ const VideosSectionFormSuspense = ({ videoId }: Props) => {
 			setisCopying(false);
 		}, 2000);
 	};
+
+	const downloadImage = (imageUrl: string | null) => {
+		if (!imageUrl) {
+			toast.error('No image available to download.');
+			return;
+		}
+
+		fetch(imageUrl)
+			.then((response) => response.blob())
+			.then((blob) => {
+				const url = window.URL.createObjectURL(blob);
+				const a = document.createElement('a');
+				a.href = url;
+				a.download = 'thumbnail.jpg'; // or any appropriate name
+				document.body.appendChild(a);
+				a.click();
+				window.URL.revokeObjectURL(url);
+				document.body.removeChild(a);
+				toast.success('Thumbnail downloaded successfully.');
+			})
+			.catch(() => {
+				toast.error('Failed to download the image.');
+			});
+	};
+
 	return (
 		<>
 			<ThumbnailUploadModal
@@ -354,6 +380,11 @@ const VideosSectionFormSuspense = ({ videoId }: Props) => {
 															}
 														>
 															<RotateCcwIcon className='h4 w-4' /> Restore
+														</DropdownMenuItem>
+														<DropdownMenuItem
+															onClick={() => downloadImage(video.thumbnailUrl)}
+														>
+															<DownloadIcon className='h4 w-4' /> Download
 														</DropdownMenuItem>
 													</DropdownMenuContent>
 												</DropdownMenu>

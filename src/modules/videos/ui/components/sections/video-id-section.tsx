@@ -7,6 +7,7 @@ import { VideoPlayer } from '../video-player';
 import { cn } from '@/lib/utils';
 import VideoBanner from '../video-banner';
 import { VideoTopRow } from '../video-top-row';
+import { useAuth } from '@clerk/nextjs';
 
 interface Props {
 	videoId: string;
@@ -23,6 +24,21 @@ export const VideoIdSection = ({ videoId }: Props) => {
 
 const VideoIdSectionSuspense = ({ videoId }: Props) => {
 	const [videoIdData] = trpc.videos.getOne.useSuspenseQuery({ id: videoId });
+
+	const { isSignedIn } = useAuth();
+	const utils = trpc.useUtils();
+
+	const createView = trpc.videoViews.create.useMutation({
+		onSuccess: () => {
+			utils.videos.getOne.invalidate({ id: videoId });
+		},
+	});
+
+	const handlePlay = () => {
+		if (!isSignedIn) return;
+
+		createView.mutate({ videoId });
+	};
 	return (
 		<>
 			<div
@@ -33,7 +49,7 @@ const VideoIdSectionSuspense = ({ videoId }: Props) => {
 			>
 				<VideoPlayer
 					autoPlay
-					onPlay={() => {}}
+					onPlay={handlePlay}
 					playbackId={videoIdData.muxPlaybackId}
 					thumbnailUrl={videoIdData.thumbnailUrl}
 				/>
