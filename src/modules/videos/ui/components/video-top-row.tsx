@@ -37,7 +37,12 @@ export const VideoTopRow = ({ video }: VideoTopRowProps) => {
 			<h1 className='text-xl font-semibold'>{video.title}</h1>
 			<div className='flex flex-col justify-between gap-4'>
 				<VideoOwner user={video.user} videoId={video.id} video={video} />
-				<VideoReactions />
+				<VideoReactions
+					viewerReaction={video.viewerReactions}
+					dislike={video.dislikeCount}
+					like={video.likeCount}
+					videoId={video.id}
+				/>
 			</div>
 			<VideoDescription
 				compactViews={compactViews}
