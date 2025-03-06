@@ -7,6 +7,7 @@ import { Edit, User } from 'lucide-react';
 import { SubscriptionButton } from '@/modules/subscriptions/ui/components/subscription-button';
 import UserInfo from '@/modules/users/ui/components/user-info';
 import { VideoMenu } from './video-menu';
+import { useSubscription } from '@/modules/subscriptions/hooks/use-subscription';
 
 interface VideoOwnerProps {
 	user: VideoGetOneOutputType['user'];
@@ -15,7 +16,13 @@ interface VideoOwnerProps {
 }
 
 const VideoOwner = ({ user, videoId, video }: VideoOwnerProps) => {
-	const { userId: clerkUserId } = useAuth();
+	const { userId: clerkUserId, isLoaded } = useAuth();
+
+	const { isPending, toggleSubscription } = useSubscription({
+		userId: user.id,
+		isSubscribed: user.viewerSubscribed,
+		fromVideoId: videoId,
+	});
 
 	return (
 		<div className='flex items-center justify-between gap-3 min-w-0'>
@@ -27,35 +34,39 @@ const VideoOwner = ({ user, videoId, video }: VideoOwnerProps) => {
 				>
 					<UserAvatar
 						size='default'
-						imageUrl={user.imageUrl}
-						name={user.name}
+						imageUrl={user?.imageUrl ?? ''}
+						name={user?.name ?? 'Unknown'}
 					/>
-					<div className=''>
+					<div>
 						<UserInfo
-							name={user.name}
-							tooltip={user.name}
-							icon={<User className='mr-2' />}
+							name={user?.name ?? 'Unknown'}
+							tooltip={user?.name ?? ''}
+							icon={<User />}
 							size='default'
 						/>
-						<span className='text-sm text-muted-foreground line-clamp-1'>
-							{/* Todo: subscribers count */}0 subscriber/s
-						</span>
+						{user.subscriberCount === 1 && (
+							<div className='text-sm text-muted-foreground line-clamp-1 border rounded-full shadow flex justify-center'>
+								<span className='mr-1 text-black'>
+									{user?.subscriberCount ?? 0}{' '}
+								</span>
+								{user.subscriberCount === 1 ? 'subscriber' : 'subscribers'}
+							</div>
+						)}
 					</div>
 				</Link>
 				{/* Subscription Button (Only visible for other users) */}
-				{clerkUserId !== user.clerkId && (
+				{clerkUserId && user?.clerkId && clerkUserId !== user.clerkId && (
 					<SubscriptionButton
-						className=''
-						disabled={false}
-						isSubscribed={false}
-						onClick={() => {}}
+						disabled={isPending || !isLoaded}
+						isSubscribed={user.viewerSubscribed}
+						onClick={toggleSubscription}
 						size='default'
 					/>
 				)}
 			</div>
-			<div className=' flex gap-x-2'>
+			<div className='flex gap-x-2'>
 				{/* Right Section: Edit Video Button */}
-				{clerkUserId === user.clerkId && (
+				{clerkUserId === user?.clerkId && (
 					<Button className='rounded-full' asChild variant='default'>
 						<Link href={`/studio/videos/${videoId}`}>
 							<Edit className='h-4 w-4 mr-2' /> Edit Video
