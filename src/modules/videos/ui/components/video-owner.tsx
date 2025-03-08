@@ -3,10 +3,9 @@ import { VideoGetOneOutputType } from '../type';
 import Link from 'next/link';
 import { useAuth } from '@clerk/nextjs';
 import { Button } from '@/components/ui/button';
-import { Edit, User } from 'lucide-react';
+import { Edit, User2Icon } from 'lucide-react';
 import { SubscriptionButton } from '@/modules/subscriptions/ui/components/subscription-button';
 import UserInfo from '@/modules/users/ui/components/user-info';
-import { VideoMenu } from './video-menu';
 import { useSubscription } from '@/modules/subscriptions/hooks/use-subscription';
 
 interface VideoOwnerProps {
@@ -15,7 +14,7 @@ interface VideoOwnerProps {
 	videoId: string;
 }
 
-const VideoOwner = ({ user, videoId, video }: VideoOwnerProps) => {
+const VideoOwner = ({ user, videoId }: VideoOwnerProps) => {
 	const { userId: clerkUserId, isLoaded } = useAuth();
 
 	const { isPending, toggleSubscription } = useSubscription({
@@ -34,18 +33,19 @@ const VideoOwner = ({ user, videoId, video }: VideoOwnerProps) => {
 				>
 					<UserAvatar
 						size='default'
-						imageUrl={user?.imageUrl ?? ''}
+						imageUrl={user?.imageUrl ?? user.name.charAt(0)}
 						name={user?.name ?? 'Unknown'}
 					/>
 					<div>
 						<UserInfo
 							name={user?.name ?? 'Unknown'}
 							tooltip={user?.name ?? ''}
-							icon={<User />}
+							icon={<User2Icon />}
 							size='default'
+							className='text-2xl'
 						/>
-						{user.subscriberCount === 1 && (
-							<div className='text-sm text-muted-foreground line-clamp-1 border rounded-full shadow flex justify-center'>
+						{user.subscriberCount >= 1 && (
+							<div className='text-sm text-muted-foreground line-clamp-1 flex items-center'>
 								<span className='mr-1 text-black'>
 									{user?.subscriberCount ?? 0}{' '}
 								</span>
@@ -73,8 +73,6 @@ const VideoOwner = ({ user, videoId, video }: VideoOwnerProps) => {
 						</Link>
 					</Button>
 				)}
-
-				<VideoMenu videoId={video.id} />
 			</div>
 		</div>
 	);

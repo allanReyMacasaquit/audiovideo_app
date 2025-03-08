@@ -6,6 +6,7 @@ import VideoDescription from './video-description';
 import VideoOwner from './video-owner';
 import { VideoReactions } from './video-reactions';
 import { format, formatDistanceToNow } from 'date-fns';
+import { VideoMenu } from './video-menu';
 
 interface VideoTopRowProps {
 	video: VideoGetOneOutputType;
@@ -35,14 +36,20 @@ export const VideoTopRow = ({ video }: VideoTopRowProps) => {
 	return (
 		<div className='flex flex-col gap-4 mt-4 p-2'>
 			<h1 className='text-xl font-semibold'>{video.title}</h1>
-			<div className='flex flex-col justify-between gap-4'>
-				<VideoOwner user={video.user} videoId={video.id} video={video} />
-				<VideoReactions
-					viewerReaction={video.viewerReactions}
-					dislike={video.dislikeCount}
-					like={video.likeCount}
-					videoId={video.id}
-				/>
+			<div className='lg:flex justify-between'>
+				<div>
+					<VideoOwner user={video.user} videoId={video.id} video={video} />
+				</div>
+
+				<div className='flex mt-2 lg:mt-0 justify-between gap-4 '>
+					<VideoReactions
+						viewerReaction={video.viewerReactions}
+						dislike={video.dislikeCount}
+						like={video.likeCount}
+						videoId={video.id}
+					/>
+					<VideoMenu videoId={video.id} />
+				</div>
 			</div>
 			<VideoDescription
 				compactViews={compactViews}

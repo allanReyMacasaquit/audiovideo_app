@@ -44,7 +44,7 @@ export const VideoReactions = ({
 	});
 
 	return (
-		<div className='flex items-center flex-none space-x-4'>
+		<div className='flex items-center flex-none space-x-1'>
 			{/* Like Button */}
 			<div className='flex flex-col items-center'>
 				<Button
@@ -54,7 +54,10 @@ export const VideoReactions = ({
 					className='rounded-l-full rounded-r-none pr-4 items-end'
 				>
 					<ThumbsUp
-						className={cn('h-4 w-4', viewerReaction === 'like' && 'fill-black')}
+						className={cn(
+							'h-4 w-4-2',
+							viewerReaction === 'like' && 'fill-black'
+						)}
 					/>
 					<span className='text-sm mt-1'>{like}</span> {/* Like Count */}
 				</Button>

@@ -36,7 +36,7 @@ const VideoDescription: React.FC<VideoDescriptionProps> = ({
 				<p
 					className={cn(
 						'text-sm whitespace-pre-wrap',
-						!isExpanded && ' line-clamp-2'
+						!isExpanded && ' line-clamp-1'
 					)}
 				>
 					{description || 'No Description available'}
@@ -48,7 +48,7 @@ const VideoDescription: React.FC<VideoDescriptionProps> = ({
 						</>
 					) : (
 						<>
-							Show more...{' '}
+							Show more...
 							<ChevronDownIcon className='h-4 w-4 animate-bounce' />
 						</>
 					)}

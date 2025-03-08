@@ -3,7 +3,7 @@
 import { Button } from '@/components/ui/button';
 import {
 	ListPlusIcon,
-	MoreVertical,
+	MoreHorizontalIcon,
 	ShareIcon,
 	Trash2Icon,
 } from 'lucide-react';
@@ -37,7 +37,7 @@ export const VideoMenu = ({
 		<DropdownMenu>
 			<DropdownMenuTrigger asChild>
 				<Button variant={variant} size='icon' className='rounded-full ml-2'>
-					<MoreVertical size={20} />
+					<MoreHorizontalIcon size={20} />
 				</Button>
 			</DropdownMenuTrigger>
 			<DropdownMenuContent align='end' onClick={(e) => e.stopPropagation()}>

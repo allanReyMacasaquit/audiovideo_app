@@ -11,8 +11,10 @@ export const SubscriptionButton = ({
 	...props // Spread all button props
 }: SubscriptionButtonProps) => {
 	return (
-		<Button {...props} className={cn('rounded-full', className)}>
-			{isSubscribed ? 'Unsubscribe' : 'Subscribe'}
-		</Button>
+		<div className='px-4'>
+			<Button {...props} className={cn('rounded-full', className)}>
+				{isSubscribed ? 'Unsubscribe' : 'Subscribe'}
+			</Button>
+		</div>
 	);
 };

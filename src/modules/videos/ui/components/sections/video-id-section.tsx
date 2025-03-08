@@ -8,13 +8,14 @@ import { cn } from '@/lib/utils';
 import VideoBanner from '../video-banner';
 import { VideoTopRow } from '../video-top-row';
 import { useAuth } from '@clerk/nextjs';
+import VideoIdSectionSkeleton from './video-id-section-skeleton';
 
 interface Props {
 	videoId: string;
 }
 export const VideoIdSection = ({ videoId }: Props) => {
 	return (
-		<Suspense fallback={<p>Loading...</p>}>
+		<Suspense fallback={<VideoIdSectionSkeleton />}>
 			<ErrorBoundary fallback={<p>Error..</p>}>
 				<VideoIdSectionSuspense videoId={videoId} />
 			</ErrorBoundary>
@@ -43,7 +44,7 @@ const VideoIdSectionSuspense = ({ videoId }: Props) => {
 		<>
 			<div
 				className={cn(
-					'aspect-video bg-black rounded-xl overflow-hidden relative px-3',
+					'aspect-video bg-black rounded-xl overflow-hidden relative px-3 mx-1',
 					videoIdData.muxStatus !== 'ready' && 'rounded-b-none'
 				)}
 			>

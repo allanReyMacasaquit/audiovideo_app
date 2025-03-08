@@ -21,7 +21,7 @@ const AuthButton = () => {
 
 	// 2. If loaded, show either the sign-in button or the user button
 	return (
-		<>
+		<div className='flex items-center'>
 			<SignedOut>
 				<SignInButton mode='modal'>
 					<Button
@@ -46,7 +46,7 @@ const AuthButton = () => {
 					</UserButton.MenuItems>
 				</UserButton>
 			</SignedIn>
-		</>
+		</div>
 	);
 };
 
