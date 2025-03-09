@@ -22,7 +22,7 @@ const VideoSectionFormSkeleton = () => {
 					<Button type='button' disabled>
 						<Skeleton className='h-6 w-16' />
 					</Button>
-					<DropdownMenu>
+					<DropdownMenu modal={false}>
 						<DropdownMenuTrigger asChild>
 							<Button variant='ghost' size='icon' disabled>
 								<MoreVerticalIcon />

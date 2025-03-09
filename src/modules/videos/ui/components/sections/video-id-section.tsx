@@ -10,13 +10,15 @@ import { VideoTopRow } from '../video-top-row';
 import { useAuth } from '@clerk/nextjs';
 import VideoIdSectionSkeleton from './video-id-section-skeleton';
 
+import FallbackSection from './fallback-section';
+
 interface Props {
 	videoId: string;
 }
 export const VideoIdSection = ({ videoId }: Props) => {
 	return (
 		<Suspense fallback={<VideoIdSectionSkeleton />}>
-			<ErrorBoundary fallback={<p>Error..</p>}>
+			<ErrorBoundary fallback={<FallbackSection />}>
 				<VideoIdSectionSuspense videoId={videoId} />
 			</ErrorBoundary>
 		</Suspense>
@@ -55,7 +57,10 @@ const VideoIdSectionSuspense = ({ videoId }: Props) => {
 					thumbnailUrl={videoIdData.thumbnailUrl}
 				/>
 			</div>
-			<VideoBanner status={videoIdData.muxStatus} />
+			<div className='px-1'>
+				<VideoBanner status={videoIdData.muxStatus} />
+			</div>
+
 			<VideoTopRow video={videoIdData} />
 		</>
 	);

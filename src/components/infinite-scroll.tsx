@@ -54,7 +54,7 @@ export const InfiniteScroll: React.FC<InfiniteScrollProps> = ({
 			)}
 			{!hasNextPage && (
 				<p className='py-4 text-sm text-muted-foreground flex justify-center'>
-					No items available / End
+					End of the list
 				</p>
 			)}
 		</div>

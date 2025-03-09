@@ -10,7 +10,6 @@ import {
 import { videoUpdateSchema } from '@/db/schema';
 import { trpc } from '@/trpc/client';
 import {
-	CogIcon,
 	Copy,
 	DownloadIcon,
 	ExternalLinkIcon,
@@ -56,6 +55,7 @@ import VideoSectionFormSkeleton from './videos-form-skeleton';
 import Image from 'next/image';
 import ThumbnailUploadModal from '@/modules/modals/thumbnail-upload-modal';
 import ThumbnailGenerateModal from '@/modules/modals/thumbnail-generate-modal';
+import FallbackSection from '@/modules/videos/ui/components/sections/fallback-section';
 
 interface Props {
 	videoId: string;
@@ -63,23 +63,7 @@ interface Props {
 export const VideosSectionForm = ({ videoId }: Props) => {
 	return (
 		<Suspense fallback={<VideoSectionFormSkeleton />}>
-			<ErrorBoundary
-				fallback={
-					<div className='justify-center items-center flex flex-col h-screen rounded-md'>
-						<div className='p-4 bg-slate-500 rounded-md text-white'>
-							<div className='flex'>
-								<h1 className='animate-pulse font-semibold text-3xl tracking-widest'>
-									SERVER ERROR
-								</h1>
-								<span>
-									<CogIcon className='animate-spin' />
-								</span>
-							</div>
-							<span>Call your Administrator</span>
-						</div>
-					</div>
-				}
-			>
+			<ErrorBoundary fallback={<FallbackSection />}>
 				<VideosSectionFormSuspense videoId={videoId} />
 			</ErrorBoundary>
 		</Suspense>
@@ -237,7 +221,7 @@ const VideosSectionFormSuspense = ({ videoId }: Props) => {
 							</Button>
 
 							{/* Dropdown Menu */}
-							<DropdownMenu>
+							<DropdownMenu modal={false}>
 								<DropdownMenuTrigger asChild>
 									<Button variant='ghost' size='icon'>
 										<MoreVerticalIcon /> {/* ✅ Fixed icon usage */}
@@ -347,7 +331,7 @@ const VideosSectionFormSuspense = ({ videoId }: Props) => {
 													alt='Thumbnail'
 													className='object-cover'
 												/>
-												<DropdownMenu>
+												<DropdownMenu modal={false}>
 													<DropdownMenuTrigger asChild>
 														<Button
 															type='button'
