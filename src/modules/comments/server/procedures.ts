@@ -1,11 +1,20 @@
 // Import logical operators, comparison functions, and a helper to retrieve all table columns from drizzle-orm.
-import { and, eq, lt, desc, or, getTableColumns, count } from 'drizzle-orm';
+import {
+	and,
+	eq,
+	lt,
+	desc,
+	or,
+	getTableColumns,
+	count,
+	inArray,
+} from 'drizzle-orm';
 
 // Import the database instance from the project’s database configuration.
 import { db } from '@/db';
 
 // Import the schema definitions for the comments and users tables.
-import { comments, users } from '@/db/schema';
+import { commentReactions, comments, users } from '@/db/schema';
 
 // Import procedure helpers and router creator for TRPC, including:
 // - baseProcedure: a base for building procedures,
@@ -82,8 +91,27 @@ export const commentsRouter = createTRPCRouter({
 					.default(null),
 			})
 		)
-		.query(async ({ input }) => {
+		.query(async ({ input, ctx }) => {
 			const { videoId, limit, cursor } = input;
+			const { clerkUserId } = ctx;
+
+			// ✅ Fix 1: Ensure `userId` is properly assigned
+			const [user] = await db
+				.select()
+				.from(users)
+				.where(inArray(users.clerkId, clerkUserId ? [clerkUserId] : []));
+
+			const userId = user?.id;
+
+			const viewerReactions = db.$with('viewer_reactions').as(
+				db
+					.select({
+						commentId: commentReactions.commentId,
+						type: commentReactions.type,
+					})
+					.from(commentReactions)
+					.where(inArray(commentReactions.userId, userId ? [userId] : []))
+			);
 
 			// Run two queries in parallel:
 			// 1) A count of all comments for the specified videoId.
@@ -97,12 +125,29 @@ export const commentsRouter = createTRPCRouter({
 					.where(eq(comments.videoId, videoId)),
 
 				db
+					.with(viewerReactions)
 					.select({
 						...getTableColumns(comments),
 						user: users,
+						viewerReaction: viewerReactions.type,
+						likeCount: db.$count(
+							commentReactions,
+							and(
+								eq(commentReactions.type, 'like'),
+								eq(commentReactions.commentId, comments.id)
+							)
+						),
+						dislikeCount: db.$count(
+							commentReactions,
+							and(
+								eq(commentReactions.type, 'dislike'),
+								eq(commentReactions.commentId, comments.id)
+							)
+						),
 					})
 					.from(comments)
 					.innerJoin(users, eq(comments.userId, users.id))
+					.leftJoin(viewerReactions, eq(comments.id, viewerReactions.commentId))
 					.where(
 						and(
 							eq(comments.videoId, videoId),
