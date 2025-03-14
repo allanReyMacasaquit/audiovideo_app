@@ -8,6 +8,8 @@ import {
 	getTableColumns,
 	count,
 	inArray,
+	isNotNull,
+	isNull,
 } from 'drizzle-orm';
 
 // Import the database instance from the project’s database configuration.
@@ -36,20 +38,34 @@ export const commentsRouter = createTRPCRouter({
 	create: protectedProcedure
 		.input(
 			z.object({
+				parentId: z.string().uuid().nullish(),
 				videoId: z.string().uuid(),
 				value: z.string(),
 			})
 		)
 		.mutation(async ({ input, ctx }) => {
-			const { videoId, value } = input;
+			const { parentId, videoId, value } = input;
 			const userId = ctx.user.id;
+
+			const [existingComment] = await db
+				.select()
+				.from(comments)
+				.where(inArray(comments.id, parentId ? [parentId] : []));
+
+			if (!existingComment && parentId) {
+				throw new TRPCError({ code: 'NOT_FOUND' });
+			}
+
+			if (existingComment?.parentId && parentId) {
+				throw new TRPCError({ code: 'BAD_REQUEST' });
+			}
 
 			const [createdComment] = await db
 				.insert(comments)
-				.values({ videoId, userId, value })
+				.values({ parentId, videoId, userId, value })
 				.returning();
 
-			return createdComment ?? { videoId, userId, value };
+			return createdComment ?? { parentId, videoId, userId, value };
 		}),
 
 	// Define a protected mutation endpoint for creating a new comment.
@@ -79,6 +95,7 @@ export const commentsRouter = createTRPCRouter({
 	getMany: baseProcedure
 		.input(
 			z.object({
+				parentId: z.string().uuid().nullish(),
 				videoId: z.string().uuid(),
 				limit: z.number().min(1).max(50).default(5),
 				// Composite cursor: includes createdAt (ISO string) and id.
@@ -92,7 +109,7 @@ export const commentsRouter = createTRPCRouter({
 			})
 		)
 		.query(async ({ input, ctx }) => {
-			const { videoId, limit, cursor } = input;
+			const { parentId, videoId, limit, cursor } = input;
 			const { clerkUserId } = ctx;
 
 			// ✅ Fix 1: Ensure `userId` is properly assigned
@@ -112,6 +129,16 @@ export const commentsRouter = createTRPCRouter({
 					.from(commentReactions)
 					.where(inArray(commentReactions.userId, userId ? [userId] : []))
 			);
+			const replies = db.$with('replies').as(
+				db
+					.select({
+						parentId: comments.parentId,
+						count: count(comments.id).as('count'),
+					})
+					.from(comments)
+					.where(isNotNull(comments.parentId))
+					.groupBy(comments.parentId)
+			);
 
 			// Run two queries in parallel:
 			// 1) A count of all comments for the specified videoId.
@@ -125,11 +152,12 @@ export const commentsRouter = createTRPCRouter({
 					.where(eq(comments.videoId, videoId)),
 
 				db
-					.with(viewerReactions)
+					.with(viewerReactions, replies)
 					.select({
 						...getTableColumns(comments),
 						user: users,
 						viewerReaction: viewerReactions.type,
+						replyCount: replies.count,
 						likeCount: db.$count(
 							commentReactions,
 							and(
@@ -148,9 +176,13 @@ export const commentsRouter = createTRPCRouter({
 					.from(comments)
 					.innerJoin(users, eq(comments.userId, users.id))
 					.leftJoin(viewerReactions, eq(comments.id, viewerReactions.commentId))
+					.leftJoin(replies, eq(comments.id, replies.parentId))
 					.where(
 						and(
 							eq(comments.videoId, videoId),
+							parentId
+								? eq(comments.parentId, parentId)
+								: isNull(comments.parentId),
 							cursor
 								? or(
 										// If there's a cursor, load only comments created before that cursor's date...
