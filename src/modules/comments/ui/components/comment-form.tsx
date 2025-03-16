@@ -108,7 +108,7 @@ export const CommentForm = ({
 						)}
 					/>
 
-					<div className='justify-end gap-2 pt-2 flex'>
+					<div className='justify-end gap-2 pt-2 px-1 flex'>
 						{onCancel && (
 							<Button
 								type='button'

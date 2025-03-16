@@ -13,13 +13,13 @@ const VideoIdView = ({ videoId }: Props) => {
 			<div className='flex flex-col xl:flex-row gap-6'>
 				<div className='flex-1 min-w-0'>
 					<VideoIdSection videoId={videoId} />
-					<div className='xl:hidden block'>
-						<SuggestionsSection />
-					</div>
 					<CommentsSection videoId={videoId} />
+					<div className='xl:hidden block'>
+						<SuggestionsSection videoId={videoId} />
+					</div>
 				</div>
 				<div className='hidden xl:block w-full xl:w-96 2xl:w-[29rem]'>
-					<SuggestionsSection />
+					<SuggestionsSection videoId={videoId} />
 				</div>
 			</div>
 		</div>

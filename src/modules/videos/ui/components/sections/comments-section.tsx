@@ -2,8 +2,7 @@
 
 // Import the InfiniteScroll component to handle loading additional data when scrolling.
 import { InfiniteScroll } from '@/components/infinite-scroll';
-// Import the Separator component to visually separate sections.
-import { Separator } from '@/components/ui/separator';
+
 // Import the CommentForm component which renders the form for submitting a new comment.
 import { CommentForm } from '@/modules/comments/ui/components/comment-form';
 // Import the CommentItem component used to display an individual comment.
@@ -60,7 +59,7 @@ const CommentsSectionSuspense = ({ videoId }: Props) => {
 
 	return (
 		// Main container with margin and padding styles.
-		<div className='mt-6 px-1'>
+		<div className='mt-6 px-4'>
 			{/* Flex container for vertical arrangement with spacing between items */}
 			<div className='flex flex-col gap-4 group'>
 				{/* Display the total number of comments with conditional pluralization */}
@@ -71,8 +70,7 @@ const CommentsSectionSuspense = ({ videoId }: Props) => {
 				<div>
 					<CommentForm videoId={videoId} />
 				</div>
-				{/* Render a visual separator between the form and the comment list */}
-				<Separator />
+
 				{/* Container for the list of comments */}
 				<div className='flex flex-col gap-4 mt-2'>
 					{/* Map over the comments array to render each comment using the CommentItem component */}

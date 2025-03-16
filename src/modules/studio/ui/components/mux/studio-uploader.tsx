@@ -16,12 +16,22 @@ export const StudioUploader = ({
 	endpoint,
 	onSuccess,
 }: StudioUploaderProps) => {
+	const getUploadUrl = async () => {
+		if (!endpoint) {
+			throw new Error('No endpoint provided');
+		}
+		const response = await fetch(endpoint);
+		const data = await response.json();
+		console.log(data);
+
+		return data.uploadUrl;
+	};
 	return (
 		<div className='flex flex-col items-center gap-4 p-4 rounded-lg w-full'>
 			{endpoint ? (
 				<div>
 					<MuxUploader
-						endpoint={endpoint}
+						endpoint={getUploadUrl}
 						onSuccess={onSuccess}
 						id='mux-uploader'
 						className='hidden group/uploader'

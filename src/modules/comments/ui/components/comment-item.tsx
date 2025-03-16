@@ -76,15 +76,23 @@ const CommentItem = ({ comment, variant = 'comment' }: Props) => {
 
 	return (
 		<>
-			<div className='border-b border-gray-200 dark:border-gray-700 flex items-start justify-between'>
+			<div className='flex items-start justify-between'>
 				<div className='flex items-start gap-2'>
 					{/* User Avatar */}
 					<Link href={`/users/${comment.userId}`} className='shrink-0'>
-						<UserAvatar
-							imageUrl={comment.user.imageUrl}
-							name={comment.user.name}
-							size='default'
-						/>
+						{variant === 'reply' ? (
+							<UserAvatar
+								imageUrl={comment.user.imageUrl}
+								name={comment.user.name}
+								size='md'
+							/>
+						) : (
+							<UserAvatar
+								imageUrl={comment.user.imageUrl}
+								name={comment.user.name}
+								size='default'
+							/>
+						)}
 					</Link>
 
 					<div className='flex flex-col mb-2'>
@@ -141,7 +149,7 @@ const CommentItem = ({ comment, variant = 'comment' }: Props) => {
 								</span>
 								{variant === 'comment' && (
 									<Button
-										onClick={() => setIsReplyOpen(true)}
+										onClick={() => setIsReplyOpen((prev) => !prev)}
 										variant='ghost'
 										size='sm'
 										className='h-8 hover:text-blue-700'

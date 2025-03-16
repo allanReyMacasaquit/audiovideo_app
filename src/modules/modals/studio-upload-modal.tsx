@@ -7,17 +7,20 @@ import { toast } from 'sonner';
 import { ResponsiveModal } from './responsive-modal';
 import { StudioUploader } from '../studio/ui/components/mux/studio-uploader';
 import { useRouter } from 'next/navigation';
+import { useClerk } from '@clerk/nextjs';
 
 const StudioUploadModal = () => {
 	const utils = trpc.useUtils();
 	const router = useRouter();
+	const clerkUser = useClerk();
 
 	const create = trpc.videos.create.useMutation({
 		onSuccess: () => {
 			utils.studio.getMany.invalidate();
 		},
 		onError: () => {
-			toast.error('Video cannot Upload');
+			toast.error('Login to upload videos.');
+			clerkUser.openSignIn();
 		},
 	});
 

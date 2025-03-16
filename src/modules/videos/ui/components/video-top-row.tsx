@@ -34,7 +34,7 @@ export const VideoTopRow = ({ video }: VideoTopRowProps) => {
 	}, [video.createdAt]);
 
 	return (
-		<div className='flex flex-col gap-4 mt-4 p-2'>
+		<div className='flex flex-col gap-4 mt-4 p-4'>
 			<h1 className='text-xl font-semibold'>{video.title}</h1>
 			<div className='lg:flex justify-between'>
 				<div>

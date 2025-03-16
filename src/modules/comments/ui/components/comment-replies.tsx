@@ -1,7 +1,6 @@
 import { Button } from '@/components/ui/button';
 import { trpc } from '@/trpc/client';
 import { Loader2Icon } from 'lucide-react'; // Assuming you're using Lucide icons
-import { formatDistanceToNow } from 'date-fns';
 import CommentItem from './comment-item';
 
 interface CommentRepliesProps {
@@ -34,58 +33,51 @@ export const CommentReplies = ({ parentId, videoId }: CommentRepliesProps) => {
 	const replies = data?.pages.flatMap((page) => page.items) || [];
 
 	return (
-		<div className='mt-2 ml-12'>
-			<div>
-				<div className='flex flex-col gap-4 mt-2'>
-					{(isLoading || isFetchingNextPage) && (
-						<div className='flex items-center justify-center'>
-							<Loader2Icon className='size-6 animate-spin text-muted-foreground' />
-						</div>
-					)}
+		<div className='ml-10'>
+			<div className='flex flex-col'>
+				{(isLoading || isFetchingNextPage) && (
+					<div className='flex items-center justify-center'>
+						<Loader2Icon className='size-6 animate-spin text-muted-foreground' />
+					</div>
+				)}
 
-					{error && (
-						<div className='text-destructive text-sm'>
-							Error loading replies: {error.message}
-						</div>
-					)}
+				{error && (
+					<div className='text-destructive text-sm'>
+						Error loading replies: {error.message}
+					</div>
+				)}
 
-					{!isLoading && !isFetchingNextPage && replies.length === 0 && (
-						<div className='text-muted-foreground text-sm'>No replies yet</div>
-					)}
+				{!isLoading && !isFetchingNextPage && replies.length === 0 && (
+					<div className='text-muted-foreground text-sm'>No replies yet</div>
+				)}
 
-					{!isLoading &&
-						replies.map((comment) => (
-							<div
-								key={comment.id}
-								className='flex gap-3 py-2 group hover:bg-muted/50 transition-colors rounded-md px-2'
-							>
-								{/* CommentItem Integration */}
-								<div className='flex-1'>
-									<CommentItem
-										key={comment.id}
-										comment={comment}
-										variant='reply'
-									/>
-									<span className='text-xs text-muted-foreground'>
-										{formatDistanceToNow(new Date(comment.createdAt), {
-											addSuffix: true,
-										})}
-									</span>
-								</div>
-							</div>
-						))}
-
-					{hasNextPage && (
-						<Button
-							variant='link'
-							onClick={() => fetchNextPage()}
-							className='text-sm p-0 h-auto text-muted-foreground hover:text-primary transition-colors'
-							disabled={isFetchingNextPage}
+				{!isLoading &&
+					replies.map((comment) => (
+						<div
+							key={comment.id}
+							className='flex gap-3 py-2 group hover:bg-muted/50 transition-colors rounded-md pl-3'
 						>
-							{isFetchingNextPage ? 'Loading...' : 'Load more replies'}
-						</Button>
-					)}
-				</div>
+							{/* CommentItem Integration */}
+							<div className='flex-1'>
+								<CommentItem
+									key={comment.id}
+									comment={comment}
+									variant='reply'
+								/>
+							</div>
+						</div>
+					))}
+
+				{hasNextPage && (
+					<Button
+						variant='link'
+						onClick={() => fetchNextPage()}
+						className='text-sm p-0 h-auto text-muted-foreground hover:text-primary transition-colors'
+						disabled={isFetchingNextPage}
+					>
+						{isFetchingNextPage ? 'Loading...' : 'Load more replies'}
+					</Button>
+				)}
 			</div>
 		</div>
 	);
