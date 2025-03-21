@@ -47,15 +47,17 @@ export const InfiniteScroll: React.FC<InfiniteScrollProps> = ({
 			{hasNextPage && isManual && (
 				// A manual trigger button when isManual is true
 				<div className='text-center my-4'>
-					<Button onClick={fetchNextPage} disabled={isFetchingNextPage}>
+					<Button
+						onClick={fetchNextPage}
+						disabled={isFetchingNextPage}
+						className='rounded-full'
+					>
 						{isFetchingNextPage ? 'Loading...' : 'Load More'}
 					</Button>
 				</div>
 			)}
 			{!hasNextPage && (
-				<p className='py-4 text-sm text-muted-foreground flex justify-center'>
-					End of the list
-				</p>
+				<p className='py-4 text-sm text-muted-foreground flex justify-center'></p>
 			)}
 		</div>
 	);

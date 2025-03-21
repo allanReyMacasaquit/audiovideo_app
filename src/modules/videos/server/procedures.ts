@@ -184,6 +184,62 @@ export const videoRouter = createTRPCRouter({
 			return workflowRunId;
 		}),
 
+	revalidate: protectedProcedure
+		.input(z.object({ id: z.string().uuid() }))
+		.mutation(async ({ ctx, input }) => {
+			const { id: userId } = ctx.user;
+
+			const [existingVideo] = await db
+				.select()
+				.from(videos)
+				.where(and(eq(videos.id, input.id), eq(videos.userId, userId)));
+
+			// Throw if video doesn't exist
+			if (!existingVideo) {
+				throw new TRPCError({ code: 'NOT_FOUND' });
+			}
+
+			if (!existingVideo.muxUploadId) {
+				throw new TRPCError({ code: 'BAD_REQUEST' });
+			}
+
+			const muxVideoUploadsRetrieve = await muxClient.video.uploads.retrieve(
+				existingVideo.muxUploadId
+			);
+
+			if (!muxVideoUploadsRetrieve.asset_id) {
+				throw new TRPCError({ code: 'BAD_REQUEST' });
+			}
+
+			const muxVideoAssetsRetrieve = await muxClient.video.assets.retrieve(
+				muxVideoUploadsRetrieve.asset_id
+			);
+
+			if (!muxVideoAssetsRetrieve) {
+				throw new TRPCError({ code: 'BAD_REQUEST' });
+			}
+
+			const playbackId = muxVideoAssetsRetrieve.playback_ids?.[0]?.id || null;
+			const assetId = muxVideoAssetsRetrieve.id;
+			const duration = muxVideoAssetsRetrieve.duration
+				? Math.round(muxVideoAssetsRetrieve.duration * 1000)
+				: 0;
+
+			// Update the video record with fetched data
+			const [updatedVideo] = await db
+				.update(videos)
+				.set({
+					muxStatus: muxVideoAssetsRetrieve.status,
+					muxPlaybackId: playbackId,
+					muxAssetId: assetId,
+					duration: duration,
+				})
+				.where(and(eq(videos.id, input.id), eq(videos.userId, userId)))
+				.returning();
+
+			return updatedVideo;
+		}),
+
 	//----------for Video Page----------//
 	getOne: baseProcedure
 		.input(z.object({ id: z.string().uuid() }))

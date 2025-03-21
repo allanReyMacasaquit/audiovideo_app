@@ -19,6 +19,7 @@ import {
 	Loader2Icon,
 	LockIcon,
 	MoreVerticalIcon,
+	RefreshCcw,
 	RotateCcwIcon,
 	SparklesIcon,
 	Trash2Icon,
@@ -192,6 +193,21 @@ const VideosSectionFormSuspense = ({ videoId }: Props) => {
 			});
 	};
 
+	const revalidate = trpc.videos.revalidate.useMutation({
+		onSuccess: () => {
+			utils.studio.getMany.invalidate();
+			utils.studio.getOne.invalidate({ id: videoId });
+			toast.success('Video revalidated successfully', {
+				description: 'The video has been successfully validated.',
+			});
+		},
+		onError: () => {
+			toast.error('Something went wrong', {
+				description: 'Failed to validate the video. Please try again later.',
+			});
+		},
+	});
+
 	return (
 		<>
 			<ThumbnailUploadModal
@@ -228,6 +244,14 @@ const VideosSectionFormSuspense = ({ videoId }: Props) => {
 									</Button>
 								</DropdownMenuTrigger>
 								<DropdownMenuContent align='end'>
+									<DropdownMenuItem
+										onClick={() => revalidate.mutate({ id: videoId })}
+									>
+										<Button variant={'ghost'} className='flex'>
+											<RefreshCcw className='w-4 h-4 mr-2 text-green-700' />
+											Revalidate
+										</Button>
+									</DropdownMenuItem>
 									<DropdownMenuItem
 										onClick={() => remove.mutate({ id: videoId })}
 									>
@@ -456,11 +480,13 @@ const VideosSectionFormSuspense = ({ videoId }: Props) => {
 										</div>
 										<div
 											className={`text-sm ${
-												(!video.muxStatus || video.muxStatus === 'preparing') &&
+												(!video.muxStatus || video.muxStatus === 'waiting') &&
 												'animate-pulse'
 											}`}
 										>
-											{snakeCaseToTitle(video.muxStatus || 'preparing...')}
+											{snakeCaseToTitle(
+												video.muxStatus || 'video processing...'
+											)}
 										</div>
 									</div>
 								</div>

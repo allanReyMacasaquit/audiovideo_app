@@ -1,0 +1,14 @@
+<svg width="200" height="220" xmlns="http://www.w3.org/2000/svg">
+  <!-- Vibrant red circle -->
+  <circle cx="100" cy="80" r="70" fill="#FF4040"/>
+  
+  <!-- White play triangle -->
+  <polygon points="80,50 120,80 80,110" fill="#FFFFFF"/>
+  
+  <!-- SideTRACK text below the logo in black -->
+  <text x="100" y="170" font-family="Arial, sans-serif" font-size="20" font-weight="bold" fill="#000000" text-anchor="middle">SideTRACK</text>
+  
+  <!-- Small offset lines below SideTRACK text in black -->
+  <path d="M80,175 H120" stroke="#000000" stroke-width="2" fill="none"/>
+  <path d="M85,180 H115" stroke="#000000" stroke-width="2" fill="none"/>
+</svg>

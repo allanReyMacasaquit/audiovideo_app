@@ -108,7 +108,7 @@ export const CommentForm = ({
 						)}
 					/>
 
-					<div className='justify-end gap-2 pt-2 px-1 flex'>
+					<div className='justify-end gap-2 pt-2 flex'>
 						{onCancel && (
 							<Button
 								type='button'
@@ -121,7 +121,12 @@ export const CommentForm = ({
 								Cancel
 							</Button>
 						)}
-						<Button type='submit' disabled={create.isPending} size='sm'>
+						<Button
+							type='submit'
+							disabled={create.isPending}
+							size='sm'
+							className='rounded-full'
+						>
 							{variant === 'reply' ? 'Reply' : 'Comment'}
 						</Button>
 					</div>

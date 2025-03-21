@@ -11,7 +11,7 @@ import {
 import {
 	ChevronRightIcon,
 	MessageSquareIcon,
-	MoreVerticalIcon,
+	MoreHorizontalIcon,
 	ThumbsDownIcon,
 	ThumbsUpIcon,
 	Trash2Icon,
@@ -165,7 +165,7 @@ const CommentItem = ({ comment, variant = 'comment' }: Props) => {
 					<DropdownMenu modal={false}>
 						<DropdownMenuTrigger asChild>
 							<Button variant='ghost' size='icon' className='size-8'>
-								<MoreVerticalIcon />
+								<MoreHorizontalIcon />
 							</Button>
 						</DropdownMenuTrigger>
 						<DropdownMenuContent align='end'>

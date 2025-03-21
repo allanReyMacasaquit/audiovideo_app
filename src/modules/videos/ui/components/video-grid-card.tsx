@@ -1,7 +1,6 @@
 import { cva, VariantProps } from 'class-variance-authority';
 import Link from 'next/link';
-import { Suspense, useMemo } from 'react';
-import { ErrorBoundary } from 'react-error-boundary';
+import { useMemo } from 'react';
 import { cn } from '@/lib/utils';
 import { UserAvatar } from '@/components/user-avatar';
 import UserInfo from '@/modules/users/ui/components/user-info';
@@ -11,7 +10,6 @@ import {
 	TooltipTrigger,
 } from '@/components/ui/tooltip';
 import { VideoGetManyOutputType } from '../type';
-import FallbackSection from './sections/fallback-section';
 import VideoThumbnail from './video-thumbnail';
 import { VideoMenu } from './video-menu';
 import { formatDistanceToNow } from 'date-fns';
@@ -45,22 +43,7 @@ interface VideoGridCardProps
 	data: VideoGetManyOutputType['items'][number];
 	onRemove?: () => void;
 }
-
 export const VideoGridCard = ({ data, size, onRemove }: VideoGridCardProps) => {
-	return (
-		<Suspense fallback={<span>Loading...</span>}>
-			<ErrorBoundary fallback={<FallbackSection />}>
-				<VideoGridCardSkeleton data={data} size={size} onRemove={onRemove} />
-			</ErrorBoundary>
-		</Suspense>
-	);
-};
-
-export const VideoGridCardSkeleton = ({
-	data,
-	size,
-	onRemove,
-}: VideoGridCardProps) => {
 	const compactViews = useMemo(() => {
 		const formatter = Intl.NumberFormat('en', { notation: 'compact' });
 		return formatter.format(data.viewCount);
@@ -76,7 +59,7 @@ export const VideoGridCardSkeleton = ({
 	}, [data.createdAt]);
 
 	return (
-		<div className='px-4 mt-4'>
+		<div className='px-4 mt-2'>
 			<div className={videoGridCardVariants({ size })}>
 				<div className='relative '>
 					<Link
@@ -95,7 +78,7 @@ export const VideoGridCardSkeleton = ({
 					</div>
 				</div>
 
-				<div className='flex flex-col gap-2 px-2 pb-2'>
+				<div className='flex flex-col px-2 pb-8'>
 					<Link href={`/videos/${data.id}`}>
 						<h3
 							className={cn(
@@ -140,7 +123,7 @@ export const VideoGridCardSkeleton = ({
 							</TooltipTrigger>
 							<TooltipContent
 								side='bottom'
-								className='max-w-[300px] text-sm font-semibold bg-black/75 p-2'
+								className='max-w-[300px] text-sm font-semibold bg-black/90 p-2'
 							>
 								<p className='text-white rounded-md h-[150px] w-[300px] overflow-auto p-2'>
 									{data.description ? data.description : ''}

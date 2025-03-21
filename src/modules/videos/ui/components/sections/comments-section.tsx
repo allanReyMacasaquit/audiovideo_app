@@ -80,7 +80,6 @@ const CommentsSectionSuspense = ({ videoId }: Props) => {
 				</div>
 				{/* Render the InfiniteScroll component to load additional comments as the user scrolls */}
 				<InfiniteScroll
-					isManual
 					hasNextPage={hasNextPage}
 					isFetchingNextPage={isFetchingNextPage}
 					fetchNextPage={fetchNextPage}

@@ -75,7 +75,7 @@ export const CommentReplies = ({ parentId, videoId }: CommentRepliesProps) => {
 						className='text-sm p-0 h-auto text-muted-foreground hover:text-primary transition-colors'
 						disabled={isFetchingNextPage}
 					>
-						{isFetchingNextPage ? 'Loading...' : 'Load more replies'}
+						{isFetchingNextPage ? 'Loading...' : ''}
 					</Button>
 				)}
 			</div>

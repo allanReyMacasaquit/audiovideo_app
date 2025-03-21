@@ -9,7 +9,7 @@ const LogoMenu = () => {
 			<Link href='/'>
 				<div className='lg:p-2.5 items-center flex gap-1'>
 					<Image
-						src='/play_logo.svg'
+						src='/logo_3.svg'
 						alt='Logo'
 						width={32}
 						height={32}
